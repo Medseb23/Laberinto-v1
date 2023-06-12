@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Laberinto</title>
+  <style>
+    #game-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 100%; /* Proporción 1:1 */
+      background: url(laberinto.jpg) no-repeat center center;
+      background-size: cover;
+    }
+
+    #character {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4%; /* Ancho relativo del personaje */
+      padding-bottom: 4%; /* Alto relativo del personaje (mantiene la proporción) */
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      animation: moveAnimation 0.4s steps(4) infinite;
+    }
+
+    @keyframes moveAnimation {
+      0%, 100% { background-position-x: 0%; }
+      25% { background-position-x: 25%; }
+      50% { background-position-x: 50%; }
+      75% { background-position-x: 75%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="character"></div>
+  </div>
+
+  <script>
+    // Variables para el personaje
+    var character = document.getElementById('character');
+    var characterX = 0; // Posición inicial del personaje en el eje X
+    var characterY = 0; // Posición inicial del personaje en el eje Y
+    var isMoving = false; // Bandera para controlar el estado de movimiento del personaje
+
+    // Función para mover el personaje
+    function moveCharacter(direction) {
+      if (isMoving) return; // Si ya está en movimiento, no hacer nada
+
+      isMoving = true; // Establecer el estado de movimiento a verdadero
+
+      var step = 1; // Desplazamiento relativo en píxeles
+      var duration = 200; // Duración de cada paso de la animación en milisegundos
+
+      switch (direction) {
+        case 'left':
+          if (characterX > 0) {
+            characterX -= step;
+            character.style.transform = 'scaleX(-1)'; // Invierte horizontalmente la imagen
+            character.style.backgroundImage = 'url(charwalkHOR4.png)'; // Cambiar al último cuadro de la animación después de moverse hacia la izquierda
+          }
+          break;
+        case 'right':
+          if (characterX < 80) {
+            characterX += step;
+            character.style.transform = 'scaleX(1)';
+            character.style.backgroundImage = 'url(charwalkHOR4.png)'; // Cambiar al último cuadro de la animación después de moverse hacia la derecha
+          }
+          break;
+        case 'up':
+          if (characterY > 0) {
+            characterY -= step;
+            character.style.backgroundImage = 'url(charwalkUP4.png)'; // Cambiar al último cuadro de la animación después de moverse hacia arriba
+          }
+          break;
+        case 'down':
+          if (characterY < 80) {
+            characterY += step;
+            character.style.backgroundImage = 'url(charwalkDO4.png)'; // Cambiar al último cuadro de la animación después de moverse hacia abajo
+          }
+          break;
+      }
+
+      character.style.left = characterX + '%';
+      character.style.top = characterY + '%';
+
+      setTimeout(function() {
+        isMoving = false; // Establecer el estado de movimiento a falso después de un retraso
+        if (!isMoving) {
+          switch (direction) {
+            case 'left':
+            case 'right':
+              character.style.backgroundImage = 'url(charidleHOR.png)'; // Cambiar a la imagen de reposo al detenerse en el eje X
+              break;
+            case 'up':
+              character.style.backgroundImage = 'url(charidleUP.png)'; // Cambiar a la imagen de reposo al detenerse en el eje Y (subir)
+              break;
+            case 'down':
+              character.style.backgroundImage = 'url(charidleDO.png)'; // Cambiar a la imagen de reposo al detenerse en el eje Y (bajar)
+              break;
+          }
+        }
+      }, duration);
+    }
+
+    // Eventos de teclado para mover el personaje
+    document.addEventListener('keydown', function(event) {
+      switch (event.key) {
+        case 'a':
+          character.style.backgroundImage = 'url(charwalkHOR1.png)'; // Cambiar a la primera imagen de caminar hacia la izquierda
+          character.style.animation = 'moveAnimation 0.4s steps(4) infinite'; // Activar la animación al moverse
+          moveCharacter('left');
+          break;
+        case 'd':
+          character.style.backgroundImage = 'url(charwalkHOR1.png)'; // Cambiar a la primera imagen de caminar hacia la derecha
+          character.style.animation = 'moveAnimation 0.4s steps(4) infinite'; // Activar la animación al moverse
+          moveCharacter('right');
+          break;
+        case 'w':
+          character.style.backgroundImage = 'url(charwalkUP1.png)'; // Cambiar a la primera imagen de caminar hacia arriba
+          character.style.animation = 'moveAnimation 0.4s steps(4) infinite'; // Activar la animación al moverse
+          moveCharacter('up');
+          break;
+        case 's':
+          character.style.backgroundImage = 'url(charwalkDO1.png)'; // Cambiar a la primera imagen de caminar hacia abajo
+          character.style.animation = 'moveAnimation 0.4s steps(4) infinite'; // Activar la animación al moverse
+          moveCharacter('down');
+          break;
+      }
+    });
+
+    // Evento de teclado para detener el personaje
+    document.addEventListener('keyup', function(event) {
+      character.style.animation = 'none'; // Desactivar la animación al detenerse
+      if (!isMoving) {
+        switch (event.key) {
+          case 'a':
+          case 'd':
+            character.style.backgroundImage = 'url(charidleHOR.png)'; // Cambiar a la imagen de reposo al detenerse en el eje X
+            break;
+          case 'w':
+            character.style.backgroundImage = 'url(charidleUP.png)'; // Cambiar a la imagen de reposo al detenerse en el eje Y (subir)
+            break;
+          case 's':
+            character.style.backgroundImage = 'url(charidleDO.png)'; // Cambiar a la imagen de reposo al detenerse en el eje Y (bajar)
+            break;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
