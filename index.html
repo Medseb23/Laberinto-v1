@@ -147,7 +147,7 @@
 
         var initialSize = parseFloat(getComputedStyle(character).getPropertyValue('width')); // Tamaño actual del personaje en píxeles
         var targetSize = 10; // Tamaño objetivo del personaje en píxeles
-        var reductionRate = (initialSize - targetSize) / 1500; // Tasa de reducción del tamaño para alcanzar el tamaño objetivo en 1.5 segundos
+        var reductionRate = (initialSize - targetSize) / 500; // Tasa de reducción del tamaño para alcanzar el tamaño objetivo en 1.5 segundos
 
         var reductionInterval = setInterval(function() {
           var currentSize = parseFloat(getComputedStyle(character).getPropertyValue('width'));
