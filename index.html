@@ -141,30 +141,47 @@
         characterTop < fallZoneBottom
       ) {
         // El personaje ha colisionado con la zona de caída
-        // Aquí puedes realizar las acciones correspondientes al perder el juego, como mostrar una animación de caída y reiniciar el juego
+        // Aquí puedes realizar las acciones correspondientes al perder el juego, como reducir el tamaño del personaje y reiniciar el juego
 
-        // Reducir gradualmente el tamaño del personaje hasta desaparecer
-        character.style.animation = 'shrinkAnimation 1s forwards';
+        character.style.animation = 'none'; // Detener la animación de movimiento
 
-        // Reiniciar el juego después de un retraso
-        setTimeout(function() {
-          resetGame();
-        }, 2000); // 2000 milisegundos (2 segundos)
+        var initialSize = parseFloat(getComputedStyle(character).getPropertyValue('width')); // Tamaño actual del personaje en píxeles
+        var targetSize = 10; // Tamaño objetivo del personaje en píxeles
+        var reductionRate = (initialSize - targetSize) / 1500; // Tasa de reducción del tamaño para alcanzar el tamaño objetivo en 1.5 segundos
+
+        var reductionInterval = setInterval(function() {
+          var currentSize = parseFloat(getComputedStyle(character).getPropertyValue('width'));
+          var newSize = currentSize - reductionRate;
+
+          if (newSize > targetSize) {
+            character.style.width = newSize + 'px';
+            character.style.paddingBottom = newSize + 'px';
+          } else {
+            character.style.width = targetSize + 'px';
+            character.style.paddingBottom = targetSize + 'px';
+
+            clearInterval(reductionInterval); // Detener la reducción cuando se alcanza el tamaño objetivo
+
+            // Reiniciar el juego después de un retraso
+            setTimeout(function() {
+              resetGame();
+            }, 1500); // 1500 milisegundos (1.5 segundos)
+          }
+        }, 10); // Intervalo de reducción de tamaño
       }
     }
 
     // Función para reiniciar el juego
     function resetGame() {
-      // Restablecer la posición del personaje
       characterX = 10;
       characterY = 10;
       character.style.left = characterX + '%';
       character.style.top = characterY + '%';
 
-      // Restablecer el tamaño y la animación del personaje
-      character.style.animation = 'moveAnimation 0.4s steps(4) infinite';
+      character.style.width = '4%'; // Restaurar el ancho original del personaje
+      character.style.paddingBottom = '4%'; // Restaurar el alto original del personaje
 
-      // Restablecer la imagen de reposo del personaje
+      character.style.animation = 'moveAnimation 0.4s steps(4) infinite';
       character.style.backgroundImage = 'url(charidleHOR.png)';
     }
 
@@ -172,23 +189,23 @@
     document.addEventListener('keydown', function(event) {
       switch (event.key) {
         case 'a':
-          character.style.backgroundImage = 'url(charwalkHOR1.png)'; // Cambiar a la primera imagen de caminar hacia la izquierda
-          character.style.animation = 'moveAnimation 0.4s steps(4) infinite'; // Activar la animación al moverse
+          character.style.backgroundImage = 'url(charwalkHOR1.png)';
+          character.style.animation = 'moveAnimation 0.4s steps(4) infinite';
           moveCharacter('left');
           break;
         case 'd':
-          character.style.backgroundImage = 'url(charwalkHOR1.png)'; // Cambiar a la primera imagen de caminar hacia la derecha
-          character.style.animation = 'moveAnimation 0.4s steps(4) infinite'; // Activar la animación al moverse
+          character.style.backgroundImage = 'url(charwalkHOR1.png)';
+          character.style.animation = 'moveAnimation 0.4s steps(4) infinite';
           moveCharacter('right');
           break;
         case 'w':
-          character.style.backgroundImage = 'url(charwalkUP1.png)'; // Cambiar a la primera imagen de caminar hacia arriba
-          character.style.animation = 'moveAnimation 0.4s steps(4) infinite'; // Activar la animación al moverse
+          character.style.backgroundImage = 'url(charwalkUP1.png)';
+          character.style.animation = 'moveAnimation 0.4s steps(4) infinite';
           moveCharacter('up');
           break;
         case 's':
-          character.style.backgroundImage = 'url(charwalkDO1.png)'; // Cambiar a la primera imagen de caminar hacia abajo
-          character.style.animation = 'moveAnimation 0.4s steps(4) infinite'; // Activar la animación al moverse
+          character.style.backgroundImage = 'url(charwalkDO1.png)';
+          character.style.animation = 'moveAnimation 0.4s steps(4) infinite';
           moveCharacter('down');
           break;
       }
@@ -196,20 +213,18 @@
 
     // Evento de teclado para detener el personaje
     document.addEventListener('keyup', function(event) {
-      character.style.animation = 'none'; // Desactivar la animación al detenerse
-      if (!isMoving) {
-        switch (event.key) {
-          case 'a':
-          case 'd':
-            character.style.backgroundImage = 'url(charidleHOR.png)'; // Cambiar a la imagen de reposo al detenerse en el eje X
-            break;
-          case 'w':
-            character.style.backgroundImage = 'url(charidleUP.png)'; // Cambiar a la imagen de reposo al detenerse en el eje Y (subir)
-            break;
-          case 's':
-            character.style.backgroundImage = 'url(charidleDO.png)'; // Cambiar a la imagen de reposo al detenerse en el eje Y (bajar)
-            break;
-        }
+      character.style.animation = 'none';
+      switch (event.key) {
+        case 'a':
+        case 'd':
+          character.style.backgroundImage = 'url(charidleHOR.png)';
+          break;
+        case 'w':
+          character.style.backgroundImage = 'url(charidleUP.png)';
+          break;
+        case 's':
+          character.style.backgroundImage = 'url(charidleDO.png)';
+          break;
       }
     });
   </script>
