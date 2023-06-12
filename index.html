@@ -13,8 +13,8 @@
 
     #character {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 10%; /* Posición inicial en el eje Y dentro de los límites del juego */
+      left: 10%; /* Posición inicial en el eje X dentro de los límites del juego */
       width: 4%; /* Ancho relativo del personaje */
       padding-bottom: 4%; /* Alto relativo del personaje (mantiene la proporción) */
       background-repeat: no-repeat;
@@ -29,19 +29,36 @@
       50% { background-position-x: 50%; }
       75% { background-position-x: 75%; }
     }
+
+    #fall-zone {
+      position: absolute;
+      top: 0%; /* Coordenada Y de la zona de caída */
+      left: 17%; /* Coordenada X de la zona de caída */
+      width: 20%; /* Ancho de la zona de caída */
+      height: 10%; /* Alto de la zona de caída */
+      background-color: rgba(0, 0, 255, 0.5); /* Color de fondo semitransparente azul de la zona de caída */
+    }
   </style>
 </head>
 <body>
   <div id="game-container">
-    <div id="character"></div>
+    <div id="character" style="background-image: url(charidleHOR.png);"></div>
+    <div id="fall-zone"></div>
   </div>
 
   <script>
     // Variables para el personaje
     var character = document.getElementById('character');
-    var characterX = 0; // Posición inicial del personaje en el eje X
-    var characterY = 0; // Posición inicial del personaje en el eje Y
+    var characterX = 10; // Posición inicial del personaje en el eje X dentro de los límites del juego
+    var characterY = 10; // Posición inicial del personaje en el eje Y dentro de los límites del juego
     var isMoving = false; // Bandera para controlar el estado de movimiento del personaje
+
+    // Variables para la zona de caída
+    var fallZone = document.getElementById('fall-zone');
+    var fallZoneX = fallZone.offsetLeft;
+    var fallZoneY = fallZone.offsetTop;
+    var fallZoneWidth = fallZone.offsetWidth;
+    var fallZoneHeight = fallZone.offsetHeight;
 
     // Función para mover el personaje
     function moveCharacter(direction) {
@@ -84,6 +101,8 @@
       character.style.left = characterX + '%';
       character.style.top = characterY + '%';
 
+      checkCollision(); // Verificar colisión con la zona de caída
+
       setTimeout(function() {
         isMoving = false; // Establecer el estado de movimiento a falso después de un retraso
         if (!isMoving) {
@@ -101,6 +120,52 @@
           }
         }
       }, duration);
+    }
+
+    // Función para verificar colisión con la zona de caída
+    function checkCollision() {
+      var characterLeft = character.offsetLeft;
+      var characterRight = character.offsetLeft + character.offsetWidth;
+      var characterTop = character.offsetTop;
+      var characterBottom = character.offsetTop + character.offsetHeight;
+
+      var fallZoneLeft = fallZone.offsetLeft;
+      var fallZoneRight = fallZone.offsetLeft + fallZone.offsetWidth;
+      var fallZoneTop = fallZone.offsetTop;
+      var fallZoneBottom = fallZone.offsetTop + fallZone.offsetHeight;
+
+      if (
+        characterRight > fallZoneLeft &&
+        characterLeft < fallZoneRight &&
+        characterBottom > fallZoneTop &&
+        characterTop < fallZoneBottom
+      ) {
+        // El personaje ha colisionado con la zona de caída
+        // Aquí puedes realizar las acciones correspondientes al perder el juego, como mostrar una animación de caída y reiniciar el juego
+
+        // Reducir gradualmente el tamaño del personaje hasta desaparecer
+        character.style.animation = 'shrinkAnimation 1s forwards';
+
+        // Reiniciar el juego después de un retraso
+        setTimeout(function() {
+          resetGame();
+        }, 2000); // 2000 milisegundos (2 segundos)
+      }
+    }
+
+    // Función para reiniciar el juego
+    function resetGame() {
+      // Restablecer la posición del personaje
+      characterX = 10;
+      characterY = 10;
+      character.style.left = characterX + '%';
+      character.style.top = characterY + '%';
+
+      // Restablecer el tamaño y la animación del personaje
+      character.style.animation = 'moveAnimation 0.4s steps(4) infinite';
+
+      // Restablecer la imagen de reposo del personaje
+      character.style.backgroundImage = 'url(charidleHOR.png)';
     }
 
     // Eventos de teclado para mover el personaje
