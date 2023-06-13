@@ -138,6 +138,7 @@ function checkCollision() {
 
     character.style.animation = 'none'; // Detener la animación de movimiento
     isMoving = true; // Desactivar el movimiento
+    canMove = false;
 
     var initialSize = parseFloat(getComputedStyle(character).getPropertyValue('width')); // Tamaño actual del personaje en píxeles
     var targetSize = 10; // Tamaño objetivo del personaje en píxeles
