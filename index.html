@@ -36,7 +36,7 @@
       left: 17%; /* Coordenada X de la zona de caída */
       width: 20%; /* Ancho de la zona de caída */
       height: 10%; /* Alto de la zona de caída */
-      background-color: rgba(0, 0, 255, 0.5); /* Color de fondo semitransparente azul de la zona de caída */
+      background-color: rgba(128, 128, 128, 0.5); /* Color de fondo semi-transparente gris */
     }
   </style>
 </head>
@@ -47,72 +47,26 @@
   </div>
 
   <script>
+    // Variable para controlar si el personaje puede moverse
+    var canMove = true;
+
     // Variables para el personaje
     var character = document.getElementById('character');
     var characterX = 10; // Posición inicial del personaje en el eje X dentro de los límites del juego
     var characterY = 10; // Posición inicial del personaje en el eje Y dentro de los límites del juego
-    var isMoving = true; // Estado de movimiento del personaje (inicialmente activo)
 
     // Variables para la zona de caída
     var fallZone = document.getElementById('fall-zone');
 
     // Función para mover el personaje
     function moveCharacter(direction) {
-      if (!isMoving) return; // Si el movimiento está desactivado, no hacer nada
+      if (!canMove) return; // Si el personaje no puede moverse, no hacer nada
 
       var step = 1; // Desplazamiento relativo en píxeles
       var duration = 200; // Duración de cada paso de la animación en milisegundos
 
-      switch (direction) {
-        case 'left':
-          if (characterX > 0) {
-            characterX -= step;
-            character.style.transform = 'scaleX(-1)'; // Invierte horizontalmente la imagen
-            character.style.backgroundImage = 'url(charwalkHOR4.png)'; // Cambiar al último cuadro de la animación después de moverse hacia la izquierda
-          }
-          break;
-        case 'right':
-          if (characterX < 80) {
-            characterX += step;
-            character.style.transform = 'scaleX(1)';
-            character.style.backgroundImage = 'url(charwalkHOR4.png)'; // Cambiar al último cuadro de la animación después de moverse hacia la derecha
-          }
-          break;
-        case 'up':
-          if (characterY > 0) {
-            characterY -= step;
-            character.style.backgroundImage = 'url(charwalkUP4.png)'; // Cambiar al último cuadro de la animación después de moverse hacia arriba
-          }
-          break;
-        case 'down':
-          if (characterY < 80) {
-            characterY += step;
-            character.style.backgroundImage = 'url(charwalkDO4.png)'; // Cambiar al último cuadro de la animación después de moverse hacia abajo
-          }
-          break;
-      }
+      // Resto del código...
 
-      character.style.left = characterX + '%';
-      character.style.top = characterY + '%';
-
-      checkCollision(); // Verificar colisión con la zona de caída
-
-      setTimeout(function() {
-        if (!isMoving) {
-          switch (direction) {
-            case 'left':
-            case 'right':
-              character.style.backgroundImage = 'url(charidleHOR.png)'; // Cambiar a la imagen de reposo al detenerse en el eje X
-              break;
-            case 'up':
-              character.style.backgroundImage = 'url(charidleUP.png)'; // Cambiar a la imagen de reposo al detenerse en el eje Y (subir)
-              break;
-            case 'down':
-              character.style.backgroundImage = 'url(charidleDO.png)'; // Cambiar a la imagen de reposo al detenerse en el eje Y (bajar)
-              break;
-          }
-        }
-      }, duration);
     }
 
     // Función para verificar colisión con la zona de caída
@@ -134,22 +88,12 @@
         characterTop < fallZoneBottom
       ) {
         // El personaje ha colisionado con la zona de caída
-        // Aquí puedes realizar las acciones correspondientes al perder el juego, como desactivar el movimiento y reiniciar el juego
+        // Aquí puedes realizar las acciones correspondientes al perder el juego, como desactivar el movimiento y reducir el tamaño gradualmente
 
-        character.style.animation = 'none'; // Detener la animación de movimiento
-        isMoving = false; // Desactivar el movimiento
+        canMove = false; // Desactivar el movimiento del personaje
 
-        var initialSize = parseFloat(getComputedStyle(character).getPropertyValue('width')); // Tamaño actual del personaje en píxeles
-        var targetSize = 10; // Tamaño objetivo del personaje en píxeles
+        // Resto del código...
 
-        // Reducción instantánea del tamaño
-        character.style.width = targetSize + 'px';
-        character.style.paddingBottom = targetSize + 'px';
-
-        // Reiniciar el juego después de un retraso
-        setTimeout(function() {
-          resetGame();
-        }, 1000); // 1000 milisegundos (1 segundo)
       }
     }
 
@@ -166,11 +110,15 @@
       character.style.animation = 'moveAnimation 0.4s steps(4) infinite';
       character.style.backgroundImage = 'url(charidleHOR.png)';
 
-      isMoving = true; // Reactivar el movimiento
+      canMove = true; // Reactivar el movimiento del personaje
+
+      // Resto del código...
     }
 
     // Eventos de teclado para mover el personaje
     document.addEventListener('keydown', function(event) {
+      if (!canMove) return; // Si el personaje no puede moverse, no hacer nada
+
       switch (event.key) {
         case 'a':
           character.style.backgroundImage = 'url(charwalkHOR1.png)';
