@@ -138,7 +138,7 @@ function checkCollision() {
     // Aquí puedes realizar las acciones correspondientes al perder el juego, como desactivar el movimiento y reducir el tamaño gradualmente
 
     character.style.animation = 'none'; // Detener la animación de movimiento
-    isMoving = true; // Desactivar el movimiento
+    isMoving = false; // Desactivar el movimiento
     
 
     var initialSize = parseFloat(getComputedStyle(character).getPropertyValue('width')); // Tamaño actual del personaje en píxeles
