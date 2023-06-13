@@ -52,7 +52,7 @@
     var characterX = 10; // Posición inicial del personaje en el eje X dentro de los límites del juego
     var characterY = 10; // Posición inicial del personaje en el eje Y dentro de los límites del juego
     var isMoving = true; // Estado de movimiento del personaje (inicialmente activo)
-    var canMove = true;
+    
 
     // Variables para la zona de caída
     var fallZone = document.getElementById('fall-zone');
@@ -60,11 +60,7 @@
     // Función para mover el personaje
     function moveCharacter(direction) {
       if (!isMoving) return; // Si el movimiento está desactivado, no hacer nada
-      if (!canMove) {
-  return; // Si el personaje no puede moverse, no hacer nada
-}
-
-
+      
       var step = 1; // Desplazamiento relativo en píxeles
       var duration = 200; // Duración de cada paso de la animación en milisegundos
 
@@ -143,7 +139,7 @@ function checkCollision() {
 
     character.style.animation = 'none'; // Detener la animación de movimiento
     isMoving = true; // Desactivar el movimiento
-    canMove = false;
+    
 
     var initialSize = parseFloat(getComputedStyle(character).getPropertyValue('width')); // Tamaño actual del personaje en píxeles
     var targetSize = 10; // Tamaño objetivo del personaje en píxeles
