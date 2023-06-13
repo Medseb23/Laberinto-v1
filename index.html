@@ -50,6 +50,9 @@
     // Variable para controlar si el personaje puede moverse
     var canMove = true;
 
+    // Variable para controlar si el personaje está cayendo
+    var isFalling = false;
+
     // Variables para el personaje
     var character = document.getElementById('character');
     var characterX = 10; // Posición inicial del personaje en el eje X dentro de los límites del juego
@@ -60,26 +63,16 @@
 
     // Función para mover el personaje
     function moveCharacter(direction) {
-      if (!canMove) return; // Si el personaje no puede moverse, no hacer nada
-
-      var step = 1; // Desplazamiento relativo en píxeles
-      var duration = 200; // Duración de cada paso de la animación en milisegundos
+      if (!canMove) {
+        return; // Si el personaje no puede moverse, no hacer nada
+      }
 
       // Resto del código...
-
     }
 
     // Función para verificar colisión con la zona de caída
     function checkCollision() {
-      var characterLeft = character.offsetLeft;
-      var characterRight = character.offsetLeft + character.offsetWidth;
-      var characterTop = character.offsetTop;
-      var characterBottom = character.offsetTop + character.offsetHeight;
-
-      var fallZoneLeft = fallZone.offsetLeft;
-      var fallZoneRight = fallZone.offsetLeft + fallZone.offsetWidth;
-      var fallZoneTop = fallZone.offsetTop;
-      var fallZoneBottom = fallZone.offsetTop + fallZone.offsetHeight;
+      // Resto del código...
 
       if (
         characterRight > fallZoneLeft &&
@@ -91,6 +84,7 @@
         // Aquí puedes realizar las acciones correspondientes al perder el juego, como desactivar el movimiento y reducir el tamaño gradualmente
 
         canMove = false; // Desactivar el movimiento del personaje
+        isFalling = true; // Indicar que el personaje está cayendo
 
         // Resto del código...
 
@@ -111,13 +105,16 @@
       character.style.backgroundImage = 'url(charidleHOR.png)';
 
       canMove = true; // Reactivar el movimiento del personaje
+      isFalling = false; // Restablecer el estado de caída del personaje
 
       // Resto del código...
     }
 
     // Eventos de teclado para mover el personaje
     document.addEventListener('keydown', function(event) {
-      if (!canMove) return; // Si el personaje no puede moverse, no hacer nada
+      if (!canMove) {
+        return; // Si el personaje no puede moverse, no hacer nada
+      }
 
       switch (event.key) {
         case 'a':
